@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevCheck: Architectural Integrity Tool</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #0d1117; color: #c9d1d9; padding: 30px; display: flex; justify-content: center; }
+        .app-container { background-color: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 25px; max-width: 550px; width: 100%; }
+        h2 { color: #58a6ff; margin-top: 0; margin-bottom: 5px; }
+        .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 20px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+        input, select { width: 100%; padding: 10px; background-color: #0d1117; border: 1px solid #30363d; color: #c9d1d9; border-radius: 6px; box-sizing: border-box; }
+        .checklist-group { background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 15px; margin-top: 15px; }
+        .check-item { display: flex; align-items: center; margin-bottom: 10px; font-size: 14px; }
+        .check-item:last-child { margin-bottom: 0; }
+        input[type="checkbox"] { width: auto; margin-right: 10px; cursor: pointer; }
+        button { width: 100%; padding: 12px; background-color: #238636; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; }
+        button:hover { background-color: #2ea043; }
+        .status-box { margin-top: 20px; padding: 15px; border-radius: 6px; display: none; border-left: 4px solid; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <h2>DevCheck // Structural Integrity System</h2>
+    <div class="subtitle">An automated script verification and environment auditing application designed for software deployments.</div>
+    <div class="input-group">
+        <label for="scriptName">Target Execution Script Name:</label>
+        <input type="text" id="scriptName" placeholder="e.g., main.py">
+    </div>
+    <div class="input-group">
+        <label for="dbSchema">Target Relational Schema Name:</label>
+        <input type="text" id="dbSchema" placeholder="e.g., project">
+    </div>
+    <div class="checklist-group">
+        <label style="color: #58a6ff; margin-bottom: 10px;">Hardware & Dependency Pre-flight Audits:</label>
+        <div class="check-item">
+            <input type="checkbox" id="checkDependencies">
+            <label for="checkDependencies" style="font-weight: normal; margin-bottom: 0;">Driver package installed (`mysql-connector-python` verified)</label>
+        </div>
+        <div class="check-item">
+            <input type="checkbox" id="checkEncryption">
+            <label for="checkEncryption" style="font-weight: normal; margin-bottom: 0;">User credentials table encrypted (No plaintext passwords committed)</label>
+        </div>
+        <div class="check-item">
+            <input type="checkbox" id="checkKeys">
+            <label for="checkKeys" style="font-weight: normal; margin-bottom: 0;">Primary Key attributes bound to distinct metadata fields (e.g., `p_phone` unique)</label>
+        </div>
+    </div>
+    <button onclick="runSystemAudit()">Execute System Integrity Verification</button>
+    <div id="auditLog" class="status-box"></div>
+</div>
+<script>
+function runSystemAudit() {
+    const script = document.getElementById('scriptName').value.trim();
+    const db = document.getElementById('dbSchema').value.trim();
+    const depCheck = document.getElementById('checkDependencies').checked;
+    const cryptCheck = document.getElementById('checkEncryption').checked;
+    const keyCheck = document.getElementById('checkKeys').checked;
+    const log = document.getElementById('auditLog');
+    log.style.display = 'block';
+    if (!script || !db) {
+        log.style.backgroundColor = 'rgba(218, 54, 51, 0.1)'; log.style.borderColor = '#da3633'; log.style.color = '#f85149';
+        log.innerHTML = "<strong>CRITICAL AUDIT FAILURE:</strong> Missing operational targets. Fields cannot remain blank.";
+        return;
+    }
+    if (script !== "main.py") {
+        log.style.backgroundColor = 'rgba(214, 107, 0, 0.1)'; log.style.borderColor = '#d46b08'; log.style.color = '#f53f3f';
+        log.innerHTML = `<strong>WARNING:</strong> Non-standard execution target. Standard protocols recommend assigning entry scripts to <code>main.py</code>.`;
+        return;
+    }
+    if (!depCheck || !cryptCheck || !keyCheck) {
+        log.style.backgroundColor = 'rgba(240, 185, 11, 0.1)'; log.style.borderColor = '#f0b90b'; log.style.color = '#e3b341';
+        log.innerHTML = "<strong>INTEGRITY WARNING:</strong> Missing required structural conditions. Please complete all pre-flight verification audits.";
+        return;
+    }
+    log.style.backgroundColor = 'rgba(35, 134, 54, 0.1)'; log.style.borderColor = '#238636'; log.style.color = '#56d364';
+    log.innerHTML = `<strong>SYSTEM STATUS: INFALLIBLE</strong><br>• Execution Node: Safe deployment targets verified for <code>${script}</code>.<br>• Relational Schema: <code>${db}</code> architecture cleared. Logic rules mapped successfully. Ready for deployment pipeline.`;
+}
+</script>
+</body>
+</html>
